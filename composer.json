@@ -30,7 +30,8 @@
         "illuminate/http": "5.5.*",
         "illuminate/support": "5.5.*",
         "intervention/image": "^2.4",
-        "laravel/scout": "^3.0"
+        "laravel/scout": "^3.0",
+        "nesbot/carbon": "^1.22"
     },
     "autoload": {
         "files": [
