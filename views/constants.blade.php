@@ -1,7 +1,7 @@
 @if (config('constants'))
     <script>
         (function(global) {
-            let Valda = {};
+            let Constants = {};
 
             @foreach (config('constants') as $key => $value)
                 @if (is_array($value) && count($value) > 0)
@@ -13,16 +13,16 @@
 
                     Object.freeze({{ $key }});
 
-                    Valda.{{ $key }} = {{ $key }};
+                    Constants.{{ $key }} = {{ $key }};
                 @elseif (is_string($value))
-                    Valda.{{ $key }} = '{{ $value }}';
+                    Constants.{{ $key }} = '{{ $value }}';
                 @endif
             @endforeach
 
-            Object.freeze(Valda);
+            Object.freeze(Constants);
 
-            Object.defineProperty(global, 'Valda', {
-                value: Valda,
+            Object.defineProperty(global, 'Constants', {
+                value: Constants,
                 writable: false,
                 enumerable: true,
                 configurable: true,
