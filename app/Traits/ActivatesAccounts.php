@@ -50,13 +50,16 @@ trait ActivatesAccounts
     public function checkActivationToken(Request $request)
     {
         $data = $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
+            'e' => 'required',
+            't' => 'required',
         ]);
 
-        $model = $this->model->where('email', $data['email'])->first();
+        $email = base64_decode($data['e']);
+        $token = $data['t'];
 
-        return $model && Hash::check($data['token'], $model->activation_token)
+        $model = $this->model->where('email', $email)->first();
+
+        return $model && Hash::check($token, $model->activation_token)
             ? $this->okResponse()
             : $this->errorResponse(422, 'Invalid Token');
     }
