@@ -22,7 +22,7 @@ trait Activatable
         });
 
         static::created(function ($model) use ($token) {
-            $model->notify(new ActivateAccount($model->email, $token));
+            $model->sendAccountActivationNotification($token);
         });
     }
 
@@ -47,5 +47,16 @@ trait Activatable
         } else {
             $activate($this);
         }
+    }
+
+    /**
+     * Send the account activation notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendAccountActivationNotification($token)
+    {
+        $this->notify(new ActivateAccount($this->email, $token));
     }
 }
