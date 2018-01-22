@@ -23,7 +23,7 @@ trait ActivatesAccounts
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function activate(Request $request)
+    public function activateAccount(Request $request)
     {
         $data = $request->validate($this->rules());
 
@@ -39,6 +39,26 @@ trait ActivatesAccounts
         }
 
         return $this->sendActivationFailedResponse();
+    }
+
+    /**
+     * Check if the activation token is valid.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkActivationToken(Request $request)
+    {
+        $data = $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+        ]);
+
+        $model = $this->model->where('email', $data['email'])->first();
+
+        return $model && Hash::check($data['token'], $model->activation_token)
+            ? $this->okResponse()
+            : $this->errorResponse(422, 'Invalid Token');
     }
 
     /**
