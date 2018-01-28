@@ -41,33 +41,36 @@ trait TransformsResponses
      * Return a bad request response.
      *
      * @param  string  $message
+     * @param  array  $errors
      * @return \Illuminate\Http\Response
      */
-    protected function badRequestResponse($message = 'Bad Request')
+    protected function badRequestResponse($message = 'Bad Request', $errors = [])
     {
-        return $this->errorResponse(400, $message);
+        return $this->errorResponse(400, $message, $errors);
     }
 
     /**
      * Return an unauthorized response.
      *
      * @param  string  $message
+     * @param  array  $errors
      * @return \Illuminate\Http\Response
      */
-    protected function unauthorizedResponse($message = 'Unauthorized')
+    protected function unauthorizedResponse($message = 'Unauthorized', $errors = [])
     {
-        return $this->errorResponse(401, $message);
+        return $this->errorResponse(401, $message, $errors);
     }
 
     /**
      * Return a not found response.
      *
      * @param  string  $message
+     * @param  array  $errors
      * @return \Illuminate\Http\Response
      */
-    protected function notFoundResponse($message = 'Not Found')
+    protected function notFoundResponse($message = 'Not Found', $errors = [])
     {
-        return $this->errorResponse(404, $message);
+        return $this->errorResponse(404, $message, $errors);
     }
 
     /**
@@ -75,12 +78,13 @@ trait TransformsResponses
      *
      * @param  array  $data
      * @param  string  $message
+     * @param  mixed  $errors
      * @return \Illuminate\Http\Response
      */
-    protected function errorResponse($code = 422, $message = 'Unprocessable Entity')
+    protected function errorResponse($code = 422, $message = 'Unprocessable Entity', $errors = [])
     {
         return $this->response($code, [
-            'error' => compact('code', 'message')
+            'error' => compact('code', 'message', 'errors'),
         ]);
     }
 
