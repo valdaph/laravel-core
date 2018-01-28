@@ -3,6 +3,41 @@
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager as Image;
 
+if (!function_exists('array_not_unique')) {
+    /**
+     * Returns all duplicates in an array.
+     *
+     * @param  array  $array
+     * @return array
+     */
+    function array_not_unique($array)
+    {
+        $dupes = array();
+
+        natcasesort($array);
+        reset($array);
+
+        $oldKey = null;
+        $oldValue = null;
+
+        foreach ($array as $key => $value) {
+            if ($value === null) {
+                continue;
+            }
+
+            if (strcasecmp($oldValue, $value) === 0) {
+                $dupes[$oldKey] = $oldValue;
+                $dupes[$key] = $value;
+            }
+
+            $oldValue = $value;
+            $oldKey = $key;
+        }
+
+        return $dupes;
+    }
+}
+
 if (!function_exists('is_image')) {
     /**
      * Check if the given URL or file is a valid image.
@@ -34,30 +69,5 @@ if (!function_exists('is_image')) {
         curl_close($ch);
 
         return false;
-    }
-}
-
-if (! function_exists('storage_url')) {
-    /**
-     * Generate the URL to a file in storage.
-     *
-     * @param  string  $path
-     * @param  string  $domain
-     * @return string
-     */
-    function storage_url($path, $domain = null)
-    {
-        $domain = $domain ?: config('constants.URL.WEB', config('app.url'));
-
-        switch (config('filesystems.default')) {
-            case 'public':
-                return $domain . Storage::url($path);
-
-            case 's3':
-                return Storage::url($path);
-            
-            default:
-                return $path;
-        }
     }
 }
