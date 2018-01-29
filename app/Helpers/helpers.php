@@ -70,7 +70,7 @@ if (!function_exists('is_image')) {
     {
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_URL, $image);
         curl_setopt($ch, CURLOPT_NOBODY, 1);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -81,7 +81,7 @@ if (!function_exists('is_image')) {
             curl_close($ch);
 
             try {
-                return strpos($type, 'image/') === 0 && Image::make($url);
+                return strpos($type, 'image/') === 0 && Image::make($image);
             } catch (\Exception $e) {
                 return false;
             }
