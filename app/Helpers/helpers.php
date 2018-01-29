@@ -38,6 +38,26 @@ if (!function_exists('array_not_unique')) {
     }
 }
 
+if (!function_exists('is_date')) {
+    /**
+     * Check if given string is a valid date.
+     *
+     * @param  string  $data
+     * @param  string  $format
+     * @return boolean
+     */
+    function is_date($date, $format = 'Y-m-d')
+    {
+        try {
+            $d = Carbon::createFromFormat($format, $date);
+
+            return $d && $d->format($format) === $date;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}
+
 if (!function_exists('is_image')) {
     /**
      * Check if the given URL or file is a valid image.
@@ -69,5 +89,31 @@ if (!function_exists('is_image')) {
         curl_close($ch);
 
         return false;
+    }
+}
+
+if (!function_exists('time_to_12')) {
+    /**
+     * Convert 24 hour time to 12 hour time.
+     *
+     * @param  string  $time
+     * @return string
+     */
+    function time_to_12($time)
+    {
+        return date('h:i A', strtotime($time));
+    }
+}
+
+if (!function_exists('time_to_24')) {
+    /**
+     * Convert 12 hour time to 24 hour time.
+     *
+     * @param  string  $time
+     * @return string
+     */
+    function time_to_24($time)
+    {
+        return date('H:i', strtotime($time));
     }
 }
