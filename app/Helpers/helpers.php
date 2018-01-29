@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager as Image;
+use Intervention\Image\Facades\Image;
 
 if (!function_exists('array_not_unique')) {
     /**
