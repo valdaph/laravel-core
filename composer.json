@@ -24,10 +24,7 @@
         "php": ">=7.0.0",
         "babenkoivan/scout-elasticsearch-driver": "^3.1",
         "doctrine/dbal": "^2.6",
-        "illuminate/console": "5.5.*",
-        "illuminate/database": "5.5.*",
-        "illuminate/http": "5.5.*",
-        "illuminate/support": "5.5.*",
+        "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.4",
         "laravel/scout": "^3.0",
         "nesbot/carbon": "^1.22"
