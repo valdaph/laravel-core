@@ -3,11 +3,26 @@
 namespace Valda\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Hash;
 use Valda\Notifications\ActivateAccount;
 
 trait Activatable
 {
+    /**
+     * The token column.
+     *
+     * @var string
+     */
+    public $activationToken = 'activation_token';
+
+    /**
+     * The timestamp column.
+     *
+     * @var string
+     */
+    public $activationTimestamp = 'activated_at';
+
     /**
      * Boot the trait.
      *
@@ -18,12 +33,23 @@ trait Activatable
         $token = strtoupper(str_random(32));
 
         static::creating(function ($model) use ($token) {
-            $model->activation_token = Hash::make($token);
+            $model->{$this->activationToken} = Hash::make($token);
         });
 
         static::created(function ($model) use ($token) {
             $model->sendAccountActivationNotification($token);
         });
+    }
+
+    /**
+     * Add the activation columns to the table.
+     *
+     * @param  \Illuminate\Database\Schema\Blueprint  $table
+     */
+    public static function columns(Blueprint $table)
+    {
+        $table->string($this->activationToken)->nullable();
+        $table->timestamp($this->activationTimestamp)->nullable();
     }
 
     /**
@@ -37,8 +63,8 @@ trait Activatable
     {
         $activate = function ($model) use ($credentials) {
             $model->update([
-                'activation_token' => null,
-                'activated_at' => Carbon::now()->toDateTimeString(),
+                $this->activationToken => null,
+                $this->activationTimestamp => Carbon::now()->toDateTimeString(),
             ] + $credentials);
         };
 
