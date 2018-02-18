@@ -5,6 +5,13 @@ namespace Valda\Traits;
 trait Encryptable
 {
     /**
+     * The attributes that should be encrypted.
+     *
+     * @var array
+     */
+    protected $encrypts = [];
+
+    /**
      * Get an attribute from the model.
      *
      * @param  string  $key
@@ -14,7 +21,7 @@ trait Encryptable
     {
         $value = parent::getAttribute($key);
 
-        if (in_array($key, $this->encryptable)) {
+        if (in_array($key, $this->encrypts)) {
             $value = decrypt($value);
         }
 
@@ -30,7 +37,7 @@ trait Encryptable
      */
     public function setAttribute($key, $value)
     {
-        if (in_array($key, $this->encryptable)) {
+        if (in_array($key, $this->encrypts)) {
             $value = encrypt($value);
         }
 
@@ -47,7 +54,7 @@ trait Encryptable
         $attributes = parent::attributesToArray();
 
         foreach ($attributes as $key => $value) {
-            if (in_array($key, $this->encryptable) && !empty($value)) {
+            if (in_array($key, $this->encrypts) && !empty($value)) {
                 $attributes[$key] = decrypt($value);
             }
         }
