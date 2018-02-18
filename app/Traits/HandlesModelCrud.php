@@ -10,7 +10,7 @@ use ScoutElastic\Searchable as ElasticSearchable;
 
 trait HandlesModelCrud
 {
-    use TransformsResponses;
+    use TransformsResponses, DecodesQueries;
 
     /**
      * The resource to be used.
@@ -62,7 +62,6 @@ trait HandlesModelCrud
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  integer  $id
-     *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, $id)
@@ -247,8 +246,12 @@ trait HandlesModelCrud
                     break;
 
                 case 'integer':
-                    $value = $value === 'null' ? null : filter_var($value, FILTER_VALIDATE_INT);
-                    $where[] = [$tableKey, '=', $value];
+                case 'float':
+                    $where = array_merge($where, $this->decodeNumericQuery($value, $tableKey));
+                    break;
+
+                case 'date':
+                    $where = array_merge($where, $this->decodeDateQuery($value, $tableKey));
                     break;
 
                 case 'string':
@@ -258,9 +261,7 @@ trait HandlesModelCrud
             }
         }
 
-        if (count($where) > 0) {
-            $model->where($where);
-        }
+        count($where) > 0 && $model->where($where);
 
         return $this;
     }

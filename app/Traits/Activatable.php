@@ -14,14 +14,14 @@ trait Activatable
      *
      * @var string
      */
-    public $activationToken = 'activation_token';
+    public static $activationToken = 'activation_token';
 
     /**
      * The timestamp column.
      *
      * @var string
      */
-    public $activationTimestamp = 'activated_at';
+    public static $activationTimestamp = 'activated_at';
 
     /**
      * Boot the trait.
@@ -33,7 +33,7 @@ trait Activatable
         $token = strtoupper(str_random(32));
 
         static::creating(function ($model) use ($token) {
-            $model->{$this->activationToken} = Hash::make($token);
+            $model->{static::$activationToken} = Hash::make($token);
         });
 
         static::created(function ($model) use ($token) {
@@ -46,10 +46,10 @@ trait Activatable
      *
      * @param  \Illuminate\Database\Schema\Blueprint  $table
      */
-    public static function columns(Blueprint $table)
+    public static function activationColumns(Blueprint $table)
     {
-        $table->string($this->activationToken)->nullable();
-        $table->timestamp($this->activationTimestamp)->nullable();
+        $table->string(static::$activationToken)->nullable();
+        $table->timestamp(static::$activationTimestamp)->nullable();
     }
 
     /**
