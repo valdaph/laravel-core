@@ -19,7 +19,7 @@ trait DecodesQueries
         $greaterThanOrEqual = preg_match('/^>=([0-9]{4}-[0-9]{2}-[0-9]{2})$/', $date);
         $lessThan = preg_match('/^<([0-9]{4}-[0-9]{2}-[0-9]{2})$/', $date);
         $lessThanOrEqual = preg_match('/^<=([0-9]{4}-[0-9]{2}-[0-9]{2})$/', $date);
-        $between = preg_match('/^([0-9]{4}-[0-9]{2}-[0-9]{2})-([0-9]{4}-[0-9]{2}-[0-9]{2})$/', $date);
+        $between = preg_match('/^([0-9]{4}-[0-9]{2}-[0-9]{2}):([0-9]{4}-[0-9]{2}-[0-9]{2})$/', $date);
 
         $where = [];
 
@@ -50,7 +50,7 @@ trait DecodesQueries
         if ($between) {
             $fromTo = [];
 
-            preg_match('/^([0-9]{4}-[0-9]{2}-[0-9]{2})-([0-9]{4}-[0-9]{2}-[0-9]{2})$/', $date, $fromTo);
+            preg_match('/^([0-9]{4}-[0-9]{2}-[0-9]{2}):([0-9]{4}-[0-9]{2}-[0-9]{2})$/', $date, $fromTo);
 
             $where[] = [$column, '>=', $fromTo[1]];
             $where[] = [$column, '<=', $fromTo[2]];
@@ -74,7 +74,7 @@ trait DecodesQueries
         $greaterThanOrEqual = preg_match('/^>=(-?[0-9]*\.?[0-9]+)$/', $number);
         $lessThan = preg_match('/^<(-?[0-9]*\.?[0-9]+)$/', $number);
         $lessThanOrEqual = preg_match('/^<=(-?[0-9]*\.?[0-9]+)$/', $number);
-        $between = preg_match('/^(-?[0-9]*\.?[0-9]+)-(-?[0-9]*\.?[0-9]+)$/', $number);
+        $between = preg_match('/^(-?[0-9]*\.?[0-9]+):(-?[0-9]*\.?[0-9]+)$/', $number);
 
         $where = [];
 
@@ -105,7 +105,7 @@ trait DecodesQueries
         if ($between) {
             $fromTo = [];
 
-            preg_match('/^(-?[0-9]*\.?[0-9]+)-(-?[0-9]*\.?[0-9]+)$/', $number, $fromTo);
+            preg_match('/^(-?[0-9]*\.?[0-9]+):(-?[0-9]*\.?[0-9]+)$/', $number, $fromTo);
 
             $where[] = [$column, '>=', $fromTo[1]];
             $where[] = [$column, '<=', $fromTo[2]];
