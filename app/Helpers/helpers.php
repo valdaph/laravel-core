@@ -39,6 +39,33 @@ if (!function_exists('array_not_unique')) {
     }
 }
 
+if (!function_exists('date_range')) {
+    /**
+     * Get all the dates between two dates.
+     *
+     * @param  string  $start
+     * @param  string  $end
+     * @param  string  $format
+     * @return array
+     */
+    function date_range($start, $end, $format = 'Y-m-d')
+    {
+        $dates = [];
+        $interval = new DateInterval('P1D');
+
+        $realEnd = new DateTime($end);
+        $realEnd->add($interval);
+
+        $period = new DatePeriod(new DateTime($start), $interval, $realEnd);
+
+        foreach ($period as $date) {
+            $dates[] = $date->format($format);
+        }
+
+        return $dates;
+    }
+}
+
 if (!function_exists('is_date')) {
     /**
      * Check if given string is a valid date.
