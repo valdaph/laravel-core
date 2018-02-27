@@ -47,6 +47,10 @@ trait MasksAttributes
      */
     public function maskValue($value, $options = [])
     {
+        if (is_null($value)) {
+            return $value;
+        }
+
         $mask = array_key_exists('mask', $options) ? $options['mask'] : 'X';
         $length = strlen($value);
 
