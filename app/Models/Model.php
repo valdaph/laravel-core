@@ -3,12 +3,13 @@
 namespace Valda\Models;
 
 use Illuminate\Database\Eloquent\Model as BaseModel;
-use Valda\Traits\Encryptable;
+use Valda\Traits\EncryptsAttributes;
+use Valda\Traits\MasksAttributes;
 use Valda\Traits\SilencesModelEvents;
 
 class Model extends BaseModel
 {
-    use Encryptable, SilencesModelEvents;
+    use EncryptsAttributes, SilencesModelEvents;
     use MasksAttributes {
         getAttribute as getMaskedAttribute;
         attributesToArray as maskedAttributesToArray;
