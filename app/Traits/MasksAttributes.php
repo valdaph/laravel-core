@@ -105,7 +105,7 @@ trait MasksAttributes
         $value = parent::getAttribute($key);
 
         if ($this->isMaskable($key)) {
-            $value = $this->maskValue($value);
+            $value = $this->maskValue($value, $this->getMaskOptions($key));
         }
 
         return $value;
@@ -120,9 +120,9 @@ trait MasksAttributes
     {
         $attributes = parent::attributesToArray();
 
-        foreach ($attributes as $attribute => $value) {
-            if ($this->isMaskable($attribute)) {
-                $attributes[$attribute] = $this->maskValue($value, $this->getMaskOptions($attribute));
+        foreach ($attributes as $key => $value) {
+            if ($this->isMaskable($key)) {
+                $attributes[$key] = $this->maskValue($value, $this->getMaskOptions($key));
             }
         }
 
