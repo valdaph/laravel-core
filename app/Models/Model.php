@@ -38,6 +38,6 @@ class Model extends BaseModel
     {
         $attributes = parent::attributesToArray();
 
-        return $this->maskedAttributesToArray($attributes);
+        return array_merge($attributes, $this->maskedAttributesToArray());
     }
 }
