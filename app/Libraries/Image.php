@@ -19,6 +19,11 @@ class Image
     const FIT_CENTER = 2;
 
     /**
+     * Constant for crop fit.
+     */
+    const FIT_CROP = 3;
+
+    /**
      * The image object or path.
      *
      * @var \Intervention\Image\Image|string
@@ -84,8 +89,14 @@ class Image
      * @param  integer  $type
      * @param  string  $background
      */
-    public function __construct($image, $width = 100, $height = 100, $type = 'jpg', $fit = self::FIT_STRETCH, $background = '#fff')
-    {
+    public function __construct(
+        $image,
+        $width = 100,
+        $height = 100,
+        $type = 'jpg',
+        $fit = self::FIT_STRETCH,
+        $background = '#fff'
+    ) {
         $this->imageManager = new ImageManager();
 
         $this->image = $image;
@@ -121,6 +132,17 @@ class Image
 
                 break;
 
+            case self::FIT_CROP:
+                $this->encodedImage = (string) $this->imageManager->make($imagePath)
+                    ->fit($this->width, $this->height, function ($c) {
+                        $c->upsize();
+                    })->resize($this->width, $this->height, function ($c) {
+                        $c->aspectRatio();
+                        $c->upsize();
+                    })->encode($type ?: $this->type, $quality);
+
+                break;
+
             default:
                 $this->encodedImage = (string) $this->imageManager->make($imagePath)
                     ->resize($this->width, $this->height)
@@ -142,6 +164,18 @@ class Image
     {
         $this->fit = self::FIT_CENTER;
         $this->background = $background ?: $this->background;
+
+        return $this;
+    }
+
+    /**
+     * Crop fit the image.
+     *
+     * @return $this
+     */
+    public function fitCrop()
+    {
+        $this->fit = self::FIT_CROP;
 
         return $this;
     }

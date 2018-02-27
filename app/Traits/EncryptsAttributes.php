@@ -2,7 +2,7 @@
 
 namespace Valda\Traits;
 
-trait Encryptable
+trait EncryptsAttributes
 {
     /**
      * The attributes that should be encrypted.
