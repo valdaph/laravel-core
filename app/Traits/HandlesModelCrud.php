@@ -254,6 +254,10 @@ trait HandlesModelCrud
                     $where = array_merge($where, $this->decodeDateQuery($value, $tableKey));
                     break;
 
+                case 'datetime':
+                    $where = array_merge($where, $this->decodeDateTimeQuery($value, $tableKey));
+                    break;
+
                 case 'string':
                 case 'text':
                     $where[] = $strict ? [$tableKey, '=', $value] : [$tableKey, 'like', '%' . $value . '%'];
