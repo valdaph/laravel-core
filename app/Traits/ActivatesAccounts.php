@@ -25,15 +25,12 @@ trait ActivatesAccounts
      */
     public function activateAccount(Request $request)
     {
-        $data = $request->validate($this->rules());
+        $request->validate($this->activationRules());
 
-        $model = $this->model->where('email', $data['email'])->first();
+        $model = $this->model->where('email', $request->email)->first();
 
-        if ($model && Hash::check($data['token'], $model->activation_token)) {
-            $model->activate([
-                'password' => Hash::make($data['password']),
-                'is_enabled' => true,
-            ]);
+        if ($model && Hash::check($request->token, $model->activation_token)) {
+            $model->activate($this->activatedAttributes($request));
 
             return $this->sendActivatedResponse();
         }
@@ -65,11 +62,25 @@ trait ActivatesAccounts
     }
 
     /**
+     * Get the attributes to be updated when the account is activated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function activatedAttributes(Request $request)
+    {
+        return [
+            'password' => Hash::make($request->password),
+            'is_enabled' => true,
+        ];
+    }
+
+    /**
      * Get the account activation validation rules.
      *
      * @return array
      */
-    protected function rules()
+    protected function activationRules()
     {
         return [
             'token' => 'required',
