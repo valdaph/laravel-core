@@ -61,17 +61,15 @@ trait Activatable
      */
     public function activate($credentials = [], $fireEvent = true)
     {
-        $activate = function ($model) use ($credentials) {
-            $model->update([
-                $this->activationToken => null,
-                $this->activationTimestamp => Carbon::now()->toDateTimeString(),
-            ] + $credentials);
-        };
+        $data = $credentials + [
+            $this->activationToken => null,
+            $this->activationTimestamp => Carbon::now()->toDateTimeString(),
+        ];
 
         if (in_array(SilencesModelEvents::class, class_uses($this))) {
-            $this->silentWhen(!$fireEvent, $activate);
+            $this->silentUpdateWhen(!$fireEvent, $data);
         } else {
-            $activate($this);
+            $this->update($data);
         }
     }
 
