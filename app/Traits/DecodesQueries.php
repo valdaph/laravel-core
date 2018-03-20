@@ -18,7 +18,9 @@ trait DecodesQueries
         $dateRegex = '([0-9]{4}-[0-9]{2}-[0-9]{2})';
 
         $null = is_null($date) || $date === 'null';
+        $notNull = $date === '!null';
         $equal = preg_match("/^$dateRegex$/", $date);
+        $notEqual = preg_match("/^!$dateRegex$/", $date);
         $greaterThan = preg_match("/^>$dateRegex$/", $date);
         $greaterThanOrEqual = preg_match("/^>=$dateRegex$/", $date);
         $lessThan = preg_match("/^<$dateRegex$/", $date);
@@ -29,6 +31,10 @@ trait DecodesQueries
 
         if ($null) {
             $where[] = [$column, '=', null];
+        }
+
+        if ($notNull) {
+            $where[] = [$column, '!=', null];
         }
 
         if ($equal) {
@@ -87,15 +93,15 @@ trait DecodesQueries
                 }
             }
 
-            \Log::info($dateWhere);
-
             return $dateWhere;
         }
 
         $dateTimeRegex = '([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})';
 
         $null = is_null($dateTime) || $dateTime === 'null';
+        $notNull = $dateTime === '!null';
         $equal = preg_match("/^$dateTimeRegex$/", $dateTime);
+        $notEqual = preg_match("/^!$dateTimeRegex$/", $date);
         $greaterThan = preg_match("/^>$dateTimeRegex$/", $dateTime);
         $greaterThanOrEqual = preg_match("/^>=$dateTimeRegex$/", $dateTime);
         $lessThan = preg_match("/^<$dateTimeRegex$/", $dateTime);
@@ -106,6 +112,10 @@ trait DecodesQueries
 
         if ($null) {
             $where[] = [$column, '=', null];
+        }
+
+        if ($notNull) {
+            $where[] = [$column, '!=', null];
         }
 
         if ($equal) {
@@ -152,7 +162,9 @@ trait DecodesQueries
         $numberRegex = '(-?[0-9]*\.?[0-9]+)';
 
         $null = is_null($number) || $number === 'null';
+        $notNull = $number === '!null';
         $equal = is_numeric($number);
+        $notEqual = preg_match("/^!$numberRegex$/", $number);
         $greaterThan = preg_match("/^>$numberRegex$/", $number);
         $greaterThanOrEqual = preg_match("/^>=$numberRegex$/", $number);
         $lessThan = preg_match("/^<$numberRegex$/", $number);
@@ -163,6 +175,10 @@ trait DecodesQueries
 
         if ($null) {
             $where[] = [$column, '=', null];
+        }
+
+        if ($notNull) {
+            $where[] = [$column, '!=', null];
         }
 
         if ($equal) {

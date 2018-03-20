@@ -14,14 +14,14 @@ trait Activatable
      *
      * @var string
      */
-    public static $activationToken = 'activation_token';
+    static $activationToken = 'activation_token';
 
     /**
      * The timestamp column.
      *
      * @var string
      */
-    public static $activationTimestamp = 'activated_at';
+    static $activationTimestamp = 'activated_at';
 
     /**
      * Boot the trait.
@@ -42,6 +42,19 @@ trait Activatable
     }
 
     /**
+     * Get the observable event names.
+     *
+     * @return array
+     */
+    public function getObservableEvents()
+    {
+        return array_merge(parent::getObservableEvents, [
+            'activating',
+            'activated',
+        ]);
+    }
+
+    /**
      * Add the activation columns to the table.
      *
      * @param  \Illuminate\Database\Schema\Blueprint  $table
@@ -53,24 +66,29 @@ trait Activatable
     }
 
     /**
-     * Activates the account.
+     * Activate the account.
      *
      * @param  array  $credentials
-     * @param  boolean  $fireEvent
      * @return void
      */
-    public function activate($credentials = [], $fireEvent = true)
+    public function activate($credentials = [])
     {
+        if ($this->fireModelEvent('activating') === false) {
+            return;
+        }
+
         $data = $credentials + [
-            $this->activationToken => null,
-            $this->activationTimestamp => Carbon::now()->toDateTimeString(),
+            static::$activationToken => null,
+            static::$activationTimestamp => Carbon::now()->toDateTimeString(),
         ];
 
         if (in_array(SilencesModelEvents::class, class_uses($this))) {
-            $this->silentUpdateWhen(!$fireEvent, $data);
+            $this->silentUpdate($data);
         } else {
             $this->update($data);
         }
+
+        $this->fireModelEvent('activated', false);
     }
 
     /**
@@ -82,5 +100,27 @@ trait Activatable
     public function sendAccountActivationNotification($token)
     {
         $this->notify(new ActivateAccount($this->email, $token));
+    }
+
+    /**
+     * Resend the account activation notification.
+     *
+     * @return void
+     */
+    public function resendAccountActivationNotification()
+    {
+        $token = strtoupper(str_random(32));
+
+        if (in_array(SilencesModelEvents::class, class_uses($this))) {
+            $this->silentUpdate([
+                static::$activationToken => Hash::make($token)
+            ]);
+        } else {
+            $this->update([
+                static::$activationToken => Hash::make($token)
+            ]);
+        };
+
+        $this->sendAccountActivationNotification($token);
     }
 }
