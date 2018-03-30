@@ -318,6 +318,11 @@ trait HandlesModelCrud
 
             if (Schema::hasColumn($this->model->getTable(), $sort[0])) {
                 $model->orderBy($sort[0], count($sort) == 2 ? $sort[1] : 'asc');
+            } elseif (ends_with($sort[0], '_count')) {
+                try {
+                    $model->withCount(preg_replace('/_count$/', '', $sort[0]))
+                        ->orderBy($sort[0], count($sort) == 2 ? $sort[1] : 'asc');
+                } catch (\Exception $e) {}
             }
         }
 
