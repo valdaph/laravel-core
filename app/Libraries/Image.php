@@ -24,9 +24,9 @@ class Image
     const FIT_CROP = 3;
 
     /**
-     * The image object or path.
+     * The image instance.
      *
-     * @var \Intervention\Image\Image|string
+     * @var mixed
      */
     private $image;
 
@@ -91,15 +91,15 @@ class Image
      */
     public function __construct(
         $image,
-        $width = 100,
-        $height = 100,
+        $width = null,
+        $height = null,
         $type = 'jpg',
-        $fit = self::FIT_STRETCH,
+        $fit = null,
         $background = '#fff'
     ) {
         $this->imageManager = new ImageManager();
 
-        $this->image = $image;
+        $this->image = $this->getImage($image);
         $this->width = $width;
         $this->height = $height;
         $this->type = $type;
@@ -116,16 +116,23 @@ class Image
      */
     public function encode($quality = 85, $type = null)
     {
-        $imagePath = (is_object($this->image) && get_class($this->image) == UploadedFile::class)
-            ? $this->image->getRealPath() : $this->image;
+        $width = $this->getWidth();
+        $height = $this->getHeight();
 
         switch ($this->fit) {
+            case self::FIT_STRETCH:
+                $this->encodedImage = (string) $this->image
+                    ->resize($width, $height)
+                    ->encode($type ?: $this->type, $quality);
+
+                break;
+
             case self::FIT_CENTER:
-                $image = $this->imageManager->make($imagePath)->resize($this->width, $this->height, function ($c) {
+                $image = $this->image->resize($width, $height, function ($c) {
                     $c->aspectRatio();
                 });
 
-                $backgroundImage = $this->imageManager->canvas($this->width, $this->height, $this->background);
+                $backgroundImage = $this->imageManager->canvas($width, $height, $this->background);
                 $backgroundImage->insert($image, 'center');
 
                 $this->encodedImage = (string) $backgroundImage->encode($type ?: $this->type, $quality);
@@ -133,10 +140,10 @@ class Image
                 break;
 
             case self::FIT_CROP:
-                $this->encodedImage = (string) $this->imageManager->make($imagePath)
-                    ->fit($this->width, $this->height, function ($c) {
+                $this->encodedImage = (string) $this->image
+                    ->fit($width, $height, function ($c) {
                         $c->upsize();
-                    })->resize($this->width, $this->height, function ($c) {
+                    })->resize($width, $height, function ($c) {
                         $c->aspectRatio();
                         $c->upsize();
                     })->encode($type ?: $this->type, $quality);
@@ -144,8 +151,7 @@ class Image
                 break;
 
             default:
-                $this->encodedImage = (string) $this->imageManager->make($imagePath)
-                    ->resize($this->width, $this->height)
+                $this->encodedImage = (string) $this->image
                     ->encode($type ?: $this->type, $quality);
 
                 break;
@@ -190,6 +196,41 @@ class Image
         $this->fit = self::FIT_STRETCH;
 
         return $this;
+    }
+
+    /**
+     * Get the image's height.
+     *
+     * @return int
+     */
+    public function getHeight()
+    {
+        return $this->height ?: $this->image->getHeight();
+    }
+
+    /**
+     * Get the image instance.
+     *
+     * @param  \Illuminate\Http\UploadedFile|string  $image
+     * @return string
+     */
+    public function getImage($image)
+    {
+        $imagePath = is_object($image) && get_class($image) === UploadedFile::class
+            ? $image->getRealPath()
+            : $image;
+
+        return $this->imageManager->make($imagePath);
+    }
+
+    /**
+     * Get the image's width.
+     *
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->width ?: $this->image->getWidth();
     }
 
     /**
