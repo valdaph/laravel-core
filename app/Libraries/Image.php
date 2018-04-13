@@ -24,6 +24,16 @@ class Image
     const FIT_CROP = 3;
 
     /**
+     * Constant for widen.
+     */
+    const FIT_WIDEN = 4;
+
+    /**
+     * Constant for heighten.
+     */
+    const FIT_HEIGHTEN = 5;
+
+    /**
      * The image instance.
      *
      * @var mixed
@@ -149,6 +159,20 @@ class Image
                     })->encode($type ?: $this->type, $quality);
 
                 break;
+            
+            case self::FIT_WIDEN:
+                $this->encodedImage = (string) $this->image
+                    ->widen($this->getWidth())
+                    ->encode($type ?: $this->type, $quality);
+
+                break;
+
+            case self::FIT_HEIGHTEN:
+                $this->encodedImage = (string) $this->image
+                    ->heighten($this->getHeight())
+                    ->encode($type ?: $this->type, $quality);
+
+                break;
 
             default:
                 $this->encodedImage = (string) $this->image
@@ -234,6 +258,45 @@ class Image
     }
 
     /**
+     * Heighten the image to a given height.
+     *
+     * @param  int  $height
+     * @param  bool  $force
+     * @return $this
+     */
+    public function heighten($height, $force = false)
+    {
+        if ($force) {
+            $this->height = $height;
+        } else {
+            $this->height = $this->getHeight() >= $height
+                ? $this->getHeight()
+                : $height;
+        }
+
+        $this->fit = self::FIT_HEIGHTEN;
+
+        return $this;
+    }
+
+    /**
+     * Heighten the image to a given height if it exceeds it.
+     *
+     * @param  int  $height
+     * @return $this
+     */
+    public function heightenMax($height)
+    {
+        $this->height = $this->getHeight() >= $height
+            ? $height
+            : $this->getHeight();
+
+        $this->fit = self::FIT_HEIGHTEN;
+
+        return $this;
+    }
+
+    /**
      * Store the image.
      *
      * @param  string  $path
@@ -310,6 +373,45 @@ class Image
     public function setWidth($width)
     {
         $this->width = $width;
+
+        return $this;
+    }
+
+    /**
+     * Widen the image to a given width.
+     *
+     * @param  int  $width
+     * @param  bool  $force
+     * @return $this
+     */
+    public function widen($width, $force = false)
+    {
+        if ($force) {
+            $this->width = $width;
+        } else {
+            $this->width = $this->getWidth() >= $width
+                ? $this->getWidth()
+                : $width;
+        }
+
+        $this->fit = self::FIT_WIDEN;
+
+        return $this;
+    }
+
+    /**
+     * Widen the image to a given width if it exceeds it.
+     *
+     * @param  int  $width
+     * @return $this
+     */
+    public function widenMax($width)
+    {
+        $this->width = $this->getWidth() >= $width
+            ? $width
+            : $this->getWidth();
+
+        $this->fit = self::FIT_WIDEN;
 
         return $this;
     }
