@@ -8,14 +8,14 @@
                     let {{ $key }} = {};
 
                     @foreach ($value as $k => $v)
-                        {{ $key }}.{{ $k }} = '{{ $v }}';
+                        {{ $key }}['{{ $k }}'] = '{{ $v }}';
                     @endforeach
 
                     Object.freeze({{ $key }});
 
-                    Constants.{{ $key }} = {{ $key }};
+                    Constants['{{ $key }}'] = {{ $key }};
                 @elseif (is_string($value))
-                    Constants.{{ $key }} = '{{ $value }}';
+                    Constants['{{ $key }}'] = '{{ $value }}';
                 @endif
             @endforeach
 
@@ -41,14 +41,14 @@
                     let {{ $key }} = {};
 
                     @foreach ($value as $k => $v)
-                        {{ $key }}.{{ $k }} = '{{ $v }}';
+                        {{ $key }}['{{ $k }}'] = '{{ $v }}';
                     @endforeach
 
                     Object.freeze({{ $key }});
 
-                    {{ studly_case($constants) }}.{{ $key }} = {{ $key }};
+                    {{ studly_case($constants) }}['{{ $key }}'] = {{ $key }};
                 @elseif (is_string($value))
-                    {{ studly_case($constants) }}.{{ $key }} = '{{ $value }}';
+                    {{ studly_case($constants) }}['{{ $key }}'] = '{{ $value }}';
                 @endif
             @endforeach
 
