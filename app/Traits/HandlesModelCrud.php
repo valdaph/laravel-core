@@ -354,6 +354,7 @@ trait HandlesModelCrud
         $limit = $request->query('limit');
         $take = $request->query('take');
         $return = $request->query('return');
+        $unique = $return && strpos($return, 'unique:') === 0;
 
         switch ($return) {
             case 'count':
@@ -365,6 +366,12 @@ trait HandlesModelCrud
                 break;
 
             default:
+                if ($unique) {
+                    list(, $column) = explode(':', $return);
+
+                    return $model->select($column)->distinct()->get();
+                }
+
                 if (is_numeric($page) && is_numeric($limit)) {
                     return $model->paginate($limit);
                 }
