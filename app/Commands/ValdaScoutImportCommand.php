@@ -154,8 +154,6 @@ class ValdaScoutImportCommand extends Command
      */
     protected function importModels($models)
     {
-        config(['scout.queue' => false]);
-
         foreach ($models as $model) {
             switch (config('scout.driver')) {
                 case 'elastic':
@@ -178,8 +176,13 @@ class ValdaScoutImportCommand extends Command
 
             switch (config('scout.driver')) {
                 case 'elastic':
-                    $this->call('elastic:drop-index', ['index-configurator' => "App\IndexConfigurators\\{$baseModel}IndexConfigurator"]);
-                    $this->call('elastic:create-index', ['index-configurator' => "App\IndexConfigurators\\{$baseModel}IndexConfigurator"]);
+                    $this->call('elastic:drop-index', [
+                        'index-configurator' => "App\IndexConfigurators\\{$baseModel}IndexConfigurator"
+                    ]);
+
+                    $this->call('elastic:create-index', [
+                        'index-configurator' => "App\IndexConfigurators\\{$baseModel}IndexConfigurator"
+                    ]);
                     break;
             }
         }
