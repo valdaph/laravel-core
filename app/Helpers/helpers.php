@@ -145,3 +145,23 @@ if (!function_exists('time_to_24')) {
         return date('H:i', strtotime($time));
     }
 }
+
+if (!function_exists('url_fix')) {
+    /**
+     * Fix URLs by adding the scheme.
+     *
+     * @param  string  $time
+     * @return string
+     */
+    function url_fix($url, $secure = false, $www = false)
+    {
+        $scheme = $secure ? 'https://' : 'http://';
+        $subdomain = $www ? 'www.' : '';
+
+        if (preg_match('/^(https?:\/\/)?(www\.)?(.*)/', $url, $matches)) {
+            return $scheme . $subdomain . $matches[3];
+        }
+
+        return $scheme . $subdomain . $url;
+    }
+}
