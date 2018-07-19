@@ -120,6 +120,29 @@ if (!function_exists('is_image')) {
     }
 }
 
+if (!function_exists('is_social_tag')) {
+    /**
+     * Check if the given string is a valid social media tag.
+     *
+     * @param  string  $tag
+     * @param  string|null  $tagName
+     * @return boolean
+     */
+    function is_social_tag($tag, &$tagName = null)
+    {
+        $tagRegex = '/^(@|\/)?([A-Za-z0-9_]+)$/';
+        $isTag = preg_match($tagRegex, $tag, $tagMatches);
+
+        if ($isTag) {
+            $tagName = $tagMatches[2];
+
+            return true;
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('time_to_12')) {
     /**
      * Convert 24 hour time to 12 hour time.
