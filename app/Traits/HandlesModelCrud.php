@@ -393,7 +393,7 @@ trait HandlesModelCrud
      */
     protected function loadRelations(Request $request, $results)
     {
-        if (!$request->has('with')) {
+        if (!$request->has('with') || !$results) {
             return $results;
         }
 
