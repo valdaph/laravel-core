@@ -101,7 +101,7 @@ trait DecodesQueries
         $null = is_null($dateTime) || $dateTime === 'null';
         $notNull = $dateTime === '!null';
         $equal = preg_match("/^$dateTimeRegex$/", $dateTime);
-        $notEqual = preg_match("/^!$dateTimeRegex$/", $date);
+        $notEqual = preg_match("/^!$dateTimeRegex$/", $dateTime);
         $greaterThan = preg_match("/^>$dateTimeRegex$/", $dateTime);
         $greaterThanOrEqual = preg_match("/^>=$dateTimeRegex$/", $dateTime);
         $lessThan = preg_match("/^<$dateTimeRegex$/", $dateTime);
