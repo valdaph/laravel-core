@@ -8,13 +8,19 @@
                     let {{ $key }} = {};
 
                     @foreach ($value as $k => $v)
-                        {{ $key }}['{{ $k }}'] = '{{ $v }}';
+                        @if (is_int($v) || is_float($v))
+                            {{ $key }}['{{ $k }}'] = {{ $v }};
+                        @elseif (is_string($v))
+                            {{ $key }}['{{ $k }}'] = '{{ $v }}';
+                        @endif
                     @endforeach
 
                     Object.freeze({{ $key }});
 
                     Constants['{{ $key }}'] = {{ $key }};
-                @elseif (is_string($value))
+                @elseif (is_int($value) || is_float($value))
+                    Constants['{{ $key }}'] = {{ $value }};
+                @elseif (is_string($v))
                     Constants['{{ $key }}'] = '{{ $value }}';
                 @endif
             @endforeach
@@ -41,13 +47,19 @@
                     let {{ $key }} = {};
 
                     @foreach ($value as $k => $v)
-                        {{ $key }}['{{ $k }}'] = '{{ $v }}';
+                        @if (is_int($v) || is_float($v))
+                            {{ $key }}['{{ $k }}'] = {{ $v }};
+                        @elseif (is_string($v))
+                            {{ $key }}['{{ $k }}'] = '{{ $v }}';
+                        @endif
                     @endforeach
 
                     Object.freeze({{ $key }});
 
                     {{ studly_case($constants) }}['{{ $key }}'] = {{ $key }};
-                @elseif (is_string($value))
+                @elseif (is_int($value) || is_float($value))
+                    {{ studly_case($constants) }}['{{ $key }}'] = {{ $value }};
+                @elseif (is_string($v))
                     {{ studly_case($constants) }}['{{ $key }}'] = '{{ $value }}';
                 @endif
             @endforeach
