@@ -10,7 +10,9 @@
                     @foreach ($value as $k => $v)
                         @if (is_int($v) || is_float($v))
                             {{ $key }}['{{ $k }}'] = {{ $v }};
-                        @elseif (is_string($v))
+                        @elseif (is_bool($v))
+                            {{ $key }}['{{ $k }}'] = {{ $v ? 'true' : 'false' }};
+                        @else
                             {{ $key }}['{{ $k }}'] = '{{ $v }}';
                         @endif
                     @endforeach
@@ -20,7 +22,9 @@
                     Constants['{{ $key }}'] = {{ $key }};
                 @elseif (is_int($value) || is_float($value))
                     Constants['{{ $key }}'] = {{ $value }};
-                @elseif (is_string($v))
+                @elseif (is_bool($value))
+                    Constants['{{ $key }}'] = {{ $value ? 'true' : 'false' }};
+                @else
                     Constants['{{ $key }}'] = '{{ $value }}';
                 @endif
             @endforeach
@@ -49,7 +53,9 @@
                     @foreach ($value as $k => $v)
                         @if (is_int($v) || is_float($v))
                             {{ $key }}['{{ $k }}'] = {{ $v }};
-                        @elseif (is_string($v))
+                        @elseif (is_bool($v))
+                            {{ $key }}['{{ $k }}'] = {{ $v ? 'true' : 'false' }};
+                        @else
                             {{ $key }}['{{ $k }}'] = '{{ $v }}';
                         @endif
                     @endforeach
@@ -59,7 +65,9 @@
                     {{ studly_case($constants) }}['{{ $key }}'] = {{ $key }};
                 @elseif (is_int($value) || is_float($value))
                     {{ studly_case($constants) }}['{{ $key }}'] = {{ $value }};
-                @elseif (is_string($v))
+                @elseif (is_bool($value))
+                    {{ studly_case($constants) }}['{{ $key }}'] = {{ $value ? 'true' : 'false' }};
+                @else
                     {{ studly_case($constants) }}['{{ $key }}'] = '{{ $value }}';
                 @endif
             @endforeach
