@@ -22,12 +22,12 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "babenkoivan/scout-elasticsearch-driver": "^3.1",
-        "doctrine/dbal": "^2.6",
+        "babenkoivan/scout-elasticsearch-driver": "^3.9",
+        "doctrine/dbal": "^2.8",
         "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.4",
-        "laravel/scout": "^4.0",
-        "nesbot/carbon": "^1.22"
+        "laravel/scout": "^4.0 || ^5.0 || ^6.0",
+        "nesbot/carbon": "^1.24.1"
     },
     "autoload": {
         "files": [
