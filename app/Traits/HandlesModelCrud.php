@@ -227,6 +227,7 @@ trait HandlesModelCrud
     protected function applyWhere(Request $request, &$model)
     {
         $where = array();
+        $whereIn = array();
 
         $tableName = $this->model->getTable();
         $strict = filter_var($request->query('strict', false), FILTER_VALIDATE_BOOLEAN);
@@ -246,6 +247,16 @@ trait HandlesModelCrud
                     break;
 
                 case 'integer':
+                    $multiple = explode(',', $value);
+
+                    if (count($multiple) > 1) {
+                        $numbers = array_filter($multiple, function ($number) { 
+                            return is_numeric($number); 
+                        });
+                        $whereIn[] = ['column' => $tableKey, 'in' => $numbers];
+                    } else {
+                        $where = array_merge($where, $this->decodeNumericQuery($value, $tableKey));
+                    }
                 case 'float':
                     $where = array_merge($where, $this->decodeNumericQuery($value, $tableKey));
                     break;
@@ -266,6 +277,12 @@ trait HandlesModelCrud
         }
 
         count($where) > 0 && $model->where($where);
+
+        if (count($whereIn) > 0) {
+            foreach ($whereIn as $condition) {
+                $model->whereIn($condition['column'], $condition['in']);
+            }
+        }
 
         return $this;
     }
