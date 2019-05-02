@@ -40,6 +40,10 @@ trait DecodesQueries
         if ($equal) {
             $where[] = [$column, '=', $date];
         }
+        
+        if ($notEqual) {
+            $where[] = [$column, '!=', $date];
+        }
 
         if ($greaterThan) {
             $where[] = [$column, '>', ltrim($date, '>')];
@@ -121,6 +125,10 @@ trait DecodesQueries
         if ($equal) {
             $where[] = [$column, '=', $dateTime];
         }
+        
+        if ($notEqual) {
+            $where[] = [$column, '!=', $dateTime];
+        }
 
         if ($greaterThan) {
             $where[] = [$column, '>', ltrim($dateTime, '>')];
@@ -183,6 +191,10 @@ trait DecodesQueries
 
         if ($equal) {
             $where[] = [$column, '=', $number];
+        }
+        
+        if ($notEqual) {
+            $where[] = [$column, '!=', $number];
         }
 
         if ($greaterThan) {
