@@ -375,7 +375,7 @@ trait HandlesModelCrud
 
         switch ($return) {
             case 'count':
-                return $model->get()->count();
+                return $model->count();
                 break;
 
             case 'first':
