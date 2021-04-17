@@ -5,6 +5,7 @@ namespace Valda\Traits;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
 use ScoutElastic\Searchable as ElasticSearchable;
 
@@ -168,7 +169,7 @@ trait HandlesModelCrud
     protected function getSearchableBuilder(Request $request)
     {
         $model = get_class($this->model)::search($request->query('q'));
-        $params = array_only($request->all(), $this->getSearchableAttributes());
+        $params = Arr::only($request->all(), $this->getSearchableAttributes());
 
         foreach ($params as $key => $value) {
             $model->where($key, $value);
@@ -236,7 +237,7 @@ trait HandlesModelCrud
             ? array_values(array_diff($this->getModelAttributes(), $this->getSearchableAttributes()))
             : $this->getModelAttributes();
 
-        $params = array_only($request->all(), $attributes);
+        $params = Arr::only($request->all(), $attributes);
 
         foreach ($params as $key => $value) {
             $tableKey = $tableName . '.' . $key;
@@ -449,7 +450,7 @@ trait HandlesModelCrud
      */
     protected function getModelAttributes()
     {
-        return array_except(Schema::getColumnListing($this->model->getTable()), $this->excludeFromQuery);
+        return Arr::except(Schema::getColumnListing($this->model->getTable()), $this->excludeFromQuery);
     }
 
     /**
@@ -459,6 +460,6 @@ trait HandlesModelCrud
      */
     protected function getSearchableAttributes()
     {
-        return array_except(array_keys($this->model->getMapping()['properties']), $this->excludeFromQuery);
+        return Arr::except(array_keys($this->model->getMapping()['properties']), $this->excludeFromQuery);
     }
 }
