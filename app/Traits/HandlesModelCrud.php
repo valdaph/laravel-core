@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use ScoutElastic\Searchable as ElasticSearchable;
 
@@ -195,7 +196,7 @@ trait HandlesModelCrud
 
         foreach ($scopes as $scope) {
             try {
-                $model = $model->{camel_case($scope)}();
+                $model = $model->{Str::camel($scope)}();
             } catch (\Exception $e) {
             }
         }
@@ -419,7 +420,7 @@ trait HandlesModelCrud
 
         foreach ($relations as $relation) {
             try {
-                $results->load(camel_case($relation));
+                $results->load(Str::camel($relation));
             } catch (\Exception $e) {
             }
         }
