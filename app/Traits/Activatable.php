@@ -5,6 +5,7 @@ namespace Valda\Traits;
 use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Valda\Notifications\ActivateAccount;
 
 trait Activatable
@@ -30,7 +31,7 @@ trait Activatable
      */
     public static function bootActivatable()
     {
-        $token = strtoupper(str_random(32));
+        $token = strtoupper(Str::random(32));
 
         static::creating(function ($model) use ($token) {
             $model->{static::$activationToken} = Hash::make($token);
@@ -109,7 +110,7 @@ trait Activatable
      */
     public function resendAccountActivationNotification()
     {
-        $token = strtoupper(str_random(32));
+        $token = strtoupper(Str::random(32));
 
         if (in_array(SilencesModelEvents::class, class_uses($this))) {
             $this->silentUpdate([
