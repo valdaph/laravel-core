@@ -3,6 +3,7 @@
 namespace Valda\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use ScoutElastic\Searchable as ElasticSearchable;
 
@@ -64,7 +65,7 @@ class ValdaScoutImportCommand extends Command
     {
         foreach ($models as $model) {
             $baseModel = array_last(explode('\\', $model));
-            $snakeModel = snake_case($baseModel);
+            $snakeModel = Str::snake($baseModel);
 
             switch (config('scout.driver')) {
                 case 'elastic':
@@ -172,7 +173,7 @@ class ValdaScoutImportCommand extends Command
     {
         foreach ($models as $model) {
             $baseModel = array_last(explode('\\', $model));
-            $snakeModel = snake_case($baseModel);
+            $snakeModel = Str::snake($baseModel);
 
             switch (config('scout.driver')) {
                 case 'elastic':
