@@ -22,7 +22,7 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "babenkoivan/scout-elasticsearch-driver": "^3.9",
+        "babenkoivan/scout-elasticsearch-driver": "^3.9 || ^8.0",
         "doctrine/dbal": "^2.8",
         "guzzlehttp/guzzle": "^6.3 || ^7.0",
         "intervention/image": "^2.4",
